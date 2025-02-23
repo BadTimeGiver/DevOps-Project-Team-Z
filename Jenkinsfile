@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        eval $(minikube -p minikube docker-env)
+                        minikube -p minikube docker-en
                         docker build -t project:latest .
                     """
                 }
