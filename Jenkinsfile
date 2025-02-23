@@ -48,7 +48,7 @@ pipeline {
 
         stage("Test endpoint") {
             steps {
-                sh 'curl --fail http://localhost:8082/whoami || exit 1'
+                sh 'curl --fail http://localhost:8081/whoami || exit 1'
             }
             post {
                 failure {
