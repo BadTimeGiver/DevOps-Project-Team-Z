@@ -24,6 +24,14 @@ pipeline {
             }
         }
 
+        stage('Show files') {
+            steps {
+                script {
+                    sh 'ls'
+                }
+            }
+        }
+
         stage('Deploy to Docker') {
             steps {
                 script {
