@@ -2,6 +2,14 @@ pipeline {
     agent any
 
     stages {
+        stage('Test Docker') {
+            steps {
+                script {
+                    sh 'docker --version'
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 git branch: 'main', credentialsId: 'mon-credential-id', url: 'https://github.com/BadTimeGiver/DevOps-Project-Team-Z'
