@@ -29,10 +29,26 @@ pipeline {
             }
         }
 
+        state("Launch Kubernetes") {
+            steps {
+                sh """
+                    minikube delete
+                    minikube start
+                """
+            }
+        }
+
         stage("Create Dev Environment") {
             steps {
                 sh """
-                    echo "Create Dev Environment"
+                    # Load the image
+                    minikube image load project:latest
+
+                    # Create the Deployment & Pods
+                    kubectl apply -f Deployment.yaml
+
+                    # Launch kubectl
+                    kubectl port-forward service/m2-devops-project-service 8081:8081
                 """
             }
         }
