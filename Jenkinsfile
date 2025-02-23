@@ -43,6 +43,14 @@ pipeline {
                     curl --fail http://localhost:8082/whoami || exit 1
                 """
             }
+            post {
+                fail {
+                    echo "Something went wrong when trying to connect the API ! The new version won't be released !"
+                }
+                success {
+                    echo "The new version will be released !"
+                }
+            }
         }
 
         stage("Create Prod Environment") {
