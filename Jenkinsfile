@@ -8,10 +8,24 @@ pipeline {
             }
         }
 
+        stage("Launch Kubernetes") {
+            steps {
+                sh """
+                    minikube delete
+                    minikube start
+                    minikube docker-env
+                    minikube ssh -- docker images
+                """
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t project:latest .'
+                    sh """
+                        eval $(minikube -p minikube docker-env)
+                        docker build -t project:latest .
+                    """
                 }
             }
         }
@@ -29,16 +43,6 @@ pipeline {
             }
         }
 
-        stage("Launch Kubernetes") {
-            steps {
-                sh """
-                    minikube delete
-                    minikube start
-                    minikube docker-env
-                    minikube ssh -- docker images
-                """
-            }
-        }
 
         stage("Create Dev Environment") {
             steps {
