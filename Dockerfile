@@ -7,6 +7,8 @@ WORKDIR /app
 # Copy source code
 COPY . .
 
+WORKDIR ./webapi
+
 # Build application
 RUN go build -o main .
 

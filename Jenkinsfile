@@ -2,15 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Test Docker') {
-            steps {
-                script {
-                    sh 'export PATH=$PATH:/opt/homebrew/bin && docker --version'
-                }
-            }
-        }
-
-
         stage('Checkout') {
             steps {
                 git branch: 'main', credentialsId: 'mon-credential-id', url: 'https://github.com/BadTimeGiver/DevOps-Project-Team-Z'
@@ -35,6 +26,24 @@ pipeline {
                     // Run new container
                     sh 'docker run -d --name project_container -p 8081:8081 project:latest'
                 }
+            }
+        }
+
+        stage("Create Dev Environment") {
+
+        }
+
+        stage("Test endpoint") {
+            steps {
+                sh """
+                    curl --fail http://localhost:8082/whoami || exit 1
+                """
+            }
+        }
+
+        stage("Create Prod Environment") {
+            steps {
+
             }
         }
     }
