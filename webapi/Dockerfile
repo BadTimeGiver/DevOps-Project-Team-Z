@@ -7,9 +7,6 @@ WORKDIR /app
 # Copy source code
 COPY . .
 
-# Install dependencies
-RUN go mod download
-
 # Build application
 RUN go build -o main .
 
