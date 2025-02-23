@@ -30,7 +30,11 @@ pipeline {
         }
 
         stage("Create Dev Environment") {
-
+            steps {
+                sh """
+                    echo "Create Dev Environment"
+                """
+            }
         }
 
         stage("Test endpoint") {
@@ -43,7 +47,9 @@ pipeline {
 
         stage("Create Prod Environment") {
             steps {
-
+                sh """
+                    echo "Create Prod Environment"
+                """
             }
         }
     }
