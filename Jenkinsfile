@@ -34,6 +34,7 @@ pipeline {
                 sh """
                     minikube delete
                     minikube start
+                    eval $(minikube docker-env)
                     minikube ssh -- docker images
                 """
             }
