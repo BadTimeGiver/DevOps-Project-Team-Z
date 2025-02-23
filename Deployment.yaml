@@ -14,8 +14,7 @@ spec:
     spec:
       containers:
         - name: m2-devops-project
-          image: project:latest
-          imagePullPolicy: Never
+          image: serquand/project-devops:latest
           ports:
             - containerPort: 8081
 

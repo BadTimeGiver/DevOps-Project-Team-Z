@@ -17,41 +17,24 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build and Push Docker Image') {
             steps {
                 script {
-                    sh """
-                        eval \$(minikube -p minikube docker-env)
-                        docker build -t project:latest .
-                    """
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds',
+                                                      usernameVariable: 'DOCKERHUB_USERNAME',
+                                                      passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
+                        sh 'docker build -t serquand/project-devops:latest .'
+                        sh 'docker push serquand/project-devops:latest'
+                    }
                 }
             }
         }
-
-        stage('Deploy to Docker') {
-            steps {
-                script {
-                    // Stop & remove old container
-                    sh 'docker ps -q --filter "name=project" | xargs -r docker stop'
-                    sh 'docker ps -a -q --filter "name=project" | xargs -r docker rm'
-
-                    // Run new container
-                    sh 'docker run -d --name project_container -p 8081:8081 project:latest'
-                }
-            }
-        }
-
 
         stage("Create Dev Environment") {
             steps {
                 sh """
-                    # Load the image
-                    minikube image load project:latest
-
-                    # Create the Deployment & Pods
                     kubectl apply -f Deployment.yaml
-
-                    # Launch kubectl
                     kubectl port-forward service/m2-devops-project-service 8081:8081
                 """
             }
@@ -59,25 +42,21 @@ pipeline {
 
         stage("Test endpoint") {
             steps {
-                sh """
-                    curl --fail http://localhost:8082/whoami || exit 1
-                """
+                sh 'curl --fail http://localhost:8082/whoami || exit 1'
             }
             post {
                 failure {
-                    echo "Something went wrong when trying to connect the API ! The new version won't be released !"
+                    echo "Something went wrong when trying to connect the API! The new version won't be released!"
                 }
                 success {
-                    echo "The new version will be released !"
+                    echo "The new version will be released!"
                 }
             }
         }
 
         stage("Create Prod Environment") {
             steps {
-                sh """
-                    echo "Create Prod Environment"
-                """
+                sh 'echo "Create Prod Environment"'
             }
         }
     }
