@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', credentialsId: 'mon-credential-id', url: 'https://github.com/BadTimeGiver/DevOps-Project-Team-Z'
+                git branch: 'main', url: 'https://github.com/BadTimeGiver/DevOps-Project-Team-Z'
             }
         }
 
@@ -34,6 +34,7 @@ pipeline {
                 sh """
                     minikube delete
                     minikube start
+                    minikube ssh -- docker images
                 """
             }
         }
