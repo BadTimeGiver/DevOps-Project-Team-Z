@@ -17,6 +17,12 @@ spec:
           image: serquand/project-devops:latest
           ports:
             - containerPort: 8081
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
 
 ---
 

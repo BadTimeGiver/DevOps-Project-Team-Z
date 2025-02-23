@@ -33,10 +33,16 @@ pipeline {
 
         stage("Create Dev Environment") {
             steps {
-                sh """
-                    kubectl apply -f Deployment.yaml
-                    kubectl port-forward service/m2-devops-project-service 8081:8081
-                """
+                script {
+                    // Appliquer la nouvelle configuration (qui inclut le liveness probe)
+                    sh 'kubectl apply -f Deployment.yaml'
+
+                    // Attendre que le déploiement soit prêt
+                    sh 'kubectl rollout status deployment/m2-devops-project --timeout=60s'
+
+                    // Lancer le port-forwarding en arrière-plan
+                    sh 'kubectl port-forward service/m2-devops-project-service 8081:8081 &'
+                }
             }
         }
 
