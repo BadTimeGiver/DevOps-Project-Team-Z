@@ -4,20 +4,27 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/BadTimeGiver/DevOps-Project-Team-Z'
+                git branch: 'main', credentialsId: 'mon-credential-id', url: 'https://github.com/BadTimeGiver/DevOps-Project-Team-Z'
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t project .'
+                    sh 'docker build -t project:latest .'
                 }
             }
         }
+
         stage('Deploy to Docker') {
             steps {
                 script {
-                    sh 'docker run -d -p 8081:8081 project'
+                    // Stop & remove old container
+                    sh 'docker ps -q --filter "name=project" | xargs -r docker stop'
+                    sh 'docker ps -a -q --filter "name=project" | xargs -r docker rm'
+
+                    // Run new container
+                    sh 'docker run -d --name project_container -p 8081:8081 project:latest'
                 }
             }
         }
