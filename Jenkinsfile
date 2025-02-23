@@ -5,9 +5,7 @@ pipeline {
         stage('Test Docker') {
             steps {
                 script {
-                    sh 'echo $PATH'
-                    sh 'which docker'
-                    sh 'docker --version'
+                    sh 'export PATH=$PATH:/opt/homebrew/bin && docker --version'
                 }
             }
         }
