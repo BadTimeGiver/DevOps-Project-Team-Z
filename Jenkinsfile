@@ -13,8 +13,6 @@ pipeline {
                 sh """
                     minikube delete
                     minikube start
-                    minikube docker-env
-                    minikube ssh -- docker images
                 """
             }
         }
@@ -23,7 +21,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        minikube -p minikube docker-en
+                        eval \$(minikube -p minikube docker-env)
                         docker build -t project:latest .
                     """
                 }
