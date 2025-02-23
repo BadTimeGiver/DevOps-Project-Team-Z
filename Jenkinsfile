@@ -44,7 +44,7 @@ pipeline {
                 """
             }
             post {
-                fail {
+                failure {
                     echo "Something went wrong when trying to connect the API ! The new version won't be released !"
                 }
                 success {
