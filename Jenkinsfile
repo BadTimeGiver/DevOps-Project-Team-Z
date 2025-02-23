@@ -29,7 +29,7 @@ pipeline {
             }
         }
 
-        state("Launch Kubernetes") {
+        stage("Launch Kubernetes") {
             steps {
                 sh """
                     minikube delete
