@@ -5,10 +5,13 @@ pipeline {
         stage('Test Docker') {
             steps {
                 script {
+                    sh 'echo $PATH'
+                    sh 'which docker'
                     sh 'docker --version'
                 }
             }
         }
+
 
         stage('Checkout') {
             steps {
