@@ -36,7 +36,7 @@ pipeline {
                 script {
                     sh """
                         kubectl create namespace dev --dry-run=client -o yaml | kubectl apply -f -
-                        kubectl apply -f Deployment.yaml -n dev
+                        kubectl apply -f Deployment.yaml -n development
                         kubectl rollout status deployment/m2-devops-project -n dev --timeout=60s
                         kubectl port-forward service/m2-devops-project-service -n dev 8081:8081 &
                     """
@@ -63,7 +63,7 @@ pipeline {
                 script {
                     sh """
                         kubectl create namespace prod --dry-run=client -o yaml | kubectl apply -f -
-                        kubectl apply -f Deployment.yaml -n prod
+                        kubectl apply -f Deployment.yaml -n production
                         kubectl rollout status deployment/m2-devops-project -n prod --timeout=60s
                         kubectl port-forward service/m2-devops-project-service -n prod 8081:8081 &
                     """
