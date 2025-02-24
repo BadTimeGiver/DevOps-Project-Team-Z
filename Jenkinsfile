@@ -34,14 +34,12 @@ pipeline {
         stage("Create Dev Environment") {
             steps {
                 script {
-                    // Appliquer la nouvelle configuration (qui inclut le liveness probe)
-                    sh 'kubectl apply -f Deployment.yaml'
-
-                    // Attendre que le déploiement soit prêt
-                    sh 'kubectl rollout status deployment/m2-devops-project --timeout=60s'
-
-                    // Lancer le port-forwarding en arrière-plan
-                    sh 'kubectl port-forward service/m2-devops-project-service 8081:8081 &'
+                    sh """
+                        kubectl create namespace dev --dry-run=client -o yaml | kubectl apply -f -
+                        kubectl apply -f Deployment.yaml -n dev
+                        kubectl rollout status deployment/m2-devops-project -n dev --timeout=60s
+                        kubectl port-forward service/m2-devops-project-service -n dev 8081:8081 &
+                    """
                 }
             }
         }
@@ -62,7 +60,14 @@ pipeline {
 
         stage("Create Prod Environment") {
             steps {
-                sh 'echo "Create Prod Environment"'
+                script {
+                    sh """
+                        kubectl create namespace prod --dry-run=client -o yaml | kubectl apply -f -
+                        kubectl apply -f Deployment.yaml -n prod
+                        kubectl rollout status deployment/m2-devops-project -n prod --timeout=60s
+                        kubectl port-forward service/m2-devops-project-service -n prod 8081:8081 &
+                    """
+                }
             }
         }
     }
