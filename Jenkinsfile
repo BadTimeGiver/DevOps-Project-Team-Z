@@ -35,10 +35,10 @@ pipeline {
             steps {
                 script {
                     sh """
-                        kubectl create namespace dev --dry-run=client -o yaml | kubectl apply -f -
+                        kubectl create namespace development --dry-run=client -o yaml | kubectl apply -f -
                         kubectl apply -f Deployment.yaml -n development
-                        kubectl rollout status deployment/m2-devops-project -n dev --timeout=60s
-                        kubectl port-forward service/m2-devops-project-service -n dev 8081:8081 &
+                        kubectl rollout status deployment/m2-devops-project -n development --timeout=60s
+                        kubectl port-forward service/m2-devops-project-service -n development 8081:8081 &
                     """
                 }
             }
@@ -46,7 +46,7 @@ pipeline {
 
         stage("Test endpoint") {
             steps {
-                sh 'curl --fail http://localhost:8081/whoami || exit 1'
+                sh 'curl --fail http://localhost:8084/whoami || exit 1'
             }
             post {
                 failure {
@@ -62,10 +62,10 @@ pipeline {
             steps {
                 script {
                     sh """
-                        kubectl create namespace prod --dry-run=client -o yaml | kubectl apply -f -
+                        kubectl create namespace production --dry-run=client -o yaml | kubectl apply -f -
                         kubectl apply -f Deployment.yaml -n production
-                        kubectl rollout status deployment/m2-devops-project -n prod --timeout=60s
-                        kubectl port-forward service/m2-devops-project-service -n prod 8081:8081 &
+                        kubectl rollout status deployment/m2-devops-project -n production --timeout=60s
+                        kubectl port-forward service/m2-devops-project-service -n production 8082:8081 &
                     """
                 }
             }
