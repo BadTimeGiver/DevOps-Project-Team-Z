@@ -8,15 +8,6 @@ pipeline {
             }
         }
 
-        stage("Launch Kubernetes") {
-            steps {
-                sh """
-                    minikube delete
-                    minikube start
-                """
-            }
-        }
-
         stage('Build and Push Docker Image') {
             steps {
                 script {
@@ -46,7 +37,7 @@ pipeline {
 
         stage("Test endpoint") {
             steps {
-                sh 'curl --fail http://localhost:8084/whoami || exit 1'
+                sh 'curl --fail http://localhost:8081/whoami || exit 1'
             }
             post {
                 failure {
