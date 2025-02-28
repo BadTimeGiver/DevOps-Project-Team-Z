@@ -148,4 +148,4 @@ helm install loki grafana/loki -f values.yaml
 - In the Headers, add `X-Scope-OrgID` with a value of `foo`
 - Click on the `Save and Test` button
 - Click on the `Explore and View` button
-- Add query and paste `{env="production"} |= "error"` to get every line that has errors in production
+- Add query and paste `{env="production"} |= "error"` to get every line that has 'error' in the production environment
