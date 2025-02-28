@@ -1,17 +1,13 @@
-apiVersion: monitoring.coreos.com/v1
-kind: PrometheusRule
-metadata:
-  name: test-alert-rule
-  namespace: monitoring
-spec:
-  groups:
-    - name: test-alert-group
-      rules:
-        - alert: TestAlert
-          expr: vector(1)
-          for: 1m
-          labels:
-            severity: critical
-          annotations:
-            summary: "Test Alert"
-            description: "This is a test alert to verify email notifications."
+serverFiles:
+  alerting_rules.yml:
+    groups:
+      - name: Instances
+        rules:
+          - alert: InstanceDown
+            expr: up == 0
+            for: 1m
+            labels:
+              severity: critical
+            annotations:
+              description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute. This Alert Has been emitted by DevOps-Project-Team-Z Alert"
+              summary: "Instance {{ $labels.instance }} down"
