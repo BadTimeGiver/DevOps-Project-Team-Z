@@ -138,3 +138,14 @@ You'll then receive an email
 5. Access on the `localhost:9090/alerts` to see the list of alerts
 
 ### Part 3 - Logs Management
+1. Install Loki with the following command:
+```
+helm install loki grafana/loki -f values.yaml
+```
+
+2. Go to Grafana and create a new Loki Data Source
+- In the URL, set `http://loki-gateway.default.svc.cluster.local/`
+- In the Headers, add `X-Scope-OrgID` with a value of `foo`
+- Click on the `Save and Test` button
+- Click on the `Explore and View` button
+- Add query and paste `{env="production"} |= "error"` to get every line that has errors in production
